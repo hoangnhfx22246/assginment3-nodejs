@@ -83,7 +83,7 @@ exports.login = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "Strict", // Bảo vệ chống lại CSRF
+      sameSite: "None",
     });
 
     res.status(200).json({ result: userWithoutPassword, token, expiresAt });
@@ -104,7 +104,7 @@ exports.logout = async (req, res) => {
       res.clearCookie("token", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "Strict", // Bảo vệ chống lại CSRF
+        sameSite: "None",
       });
     }
 

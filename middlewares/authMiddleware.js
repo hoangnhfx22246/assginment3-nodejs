@@ -19,7 +19,7 @@ const authMiddleware = async (req, res, next) => {
       res.clearCookie("token", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "Strict", // Bảo vệ chống lại CSRF
+        sameSite: "None", // Bảo vệ chống lại CSRF
       });
       return res.status(401).json({ message: "Token expired, logged out" });
     } else {
