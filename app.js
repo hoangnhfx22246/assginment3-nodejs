@@ -23,17 +23,19 @@ const app = express();
 
 // Tạo HTTP server từ ứng dụng Express
 const server = http.createServer(app);
-
+const cross_url = process.env.CROSS_URL.split(",");
 // Tạo một instance của Socket.IO và cấu hình CORS
+console.log(cross_url);
+
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:3000", "http://localhost:3001"], // Chỉ cho phép các nguồn gốc này truy cập
+    origin: cross_url, // Chỉ cho phép các nguồn gốc này truy cập
     credentials: true, // Cho phép gửi cookie qua CORS
   },
 });
 
 // Danh sách các nguồn gốc được phép truy cập
-const allowedOrigins = ["http://localhost:3000", "http://localhost:3001"];
+const allowedOrigins = cross_url;
 
 // Cấu hình CORS cho ứng dụng Express
 app.use(
