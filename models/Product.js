@@ -13,22 +13,7 @@ const productSchema = new Schema(
       type: String,
       required: true,
     },
-    img1: {
-      type: String,
-      required: true,
-    },
-    img2: {
-      type: String,
-      required: true,
-    },
-    img3: {
-      type: String,
-      required: true,
-    },
-    img4: {
-      type: String,
-      required: true,
-    },
+    images: [{ type: String, required: true }],
     long_desc: {
       type: String,
       required: true,
@@ -38,6 +23,10 @@ const productSchema = new Schema(
       required: true,
     },
     price: {
+      type: Number,
+      required: true,
+    },
+    quantity: {
       type: Number,
       required: true,
     },

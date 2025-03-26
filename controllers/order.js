@@ -2,15 +2,42 @@ const { validationResult } = require("express-validator");
 const Order = require("../models/Order");
 const User = require("../models/User");
 const sendOrderConfirmationEmail = require("../utils/mailer");
+const Product = require("../models/Product");
 
 exports.postOrder = async (req, res, next) => {
   const userId = req.userId; // get in authMiddleware
   const { name, email, phone, address, carts, totalAmount } = req.body;
+
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
   try {
+    // Kiểm tra số lượng sản phẩm trong kho
+    for (const cart of carts) {
+      const product = await Product.findById(cart.product.id);
+
+      if (!product) {
+        return res
+          .status(404)
+          .json({ message: `Product not found: ${cart.product.name}` });
+      }
+
+      // Kiểm tra số lượng sản phẩm trong kho
+      if (product.quantity < cart.quantity) {
+        return res.status(400).json({
+          message: `Not enough stock for product: ${cart.product.name}. Available: ${product.quantity}, Requested: ${cart.quantity}`,
+        });
+      }
+    }
+
+    // Nếu tất cả sản phẩm đều đủ số lượng, cập nhật số lượng trong kho
+    for (const cart of carts) {
+      const product = await Product.findById(cart.product.id);
+      product.quantity -= cart.quantity;
+      await product.save();
+    }
+
     // create a new order
     const order = new Order({
       user: userId,

@@ -10,6 +10,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendOrderConfirmationEmail = (order) => {
+  const baseUrl = process.env.BASE_URL; // Lấy URL gốc từ biến môi trường
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: order.email,
@@ -35,7 +36,7 @@ const sendOrderConfirmationEmail = (order) => {
                 (cart) => `
               <tr style="text-align:center">
                 <td style="border: 1px solid #ccc">${cart.product.name}</td>
-                <td style="border: 1px solid #ccc"><img src="${
+                <td style="border: 1px solid #ccc"><img src="${baseUrl}/${
                   cart.product.img
                 }" alt="${cart.product.name}" style="width: 100%"></td>
                 <td style="border: 1px solid #ccc">${
